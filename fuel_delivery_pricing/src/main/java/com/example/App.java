@@ -63,24 +63,33 @@ public class App
                 try {
                     volume = jsonObject.getBigDecimal("volume");
                 } catch (Exception e) {
-                    volume = BigDecimal.valueOf(-1);
+                    volume = null;
                 }
                 try {
                     distance = jsonObject.getBigDecimal("distance");
                 } catch (Exception e) {
-                    distance = BigDecimal.valueOf(-1);
+                    distance = null;
                 }
                 try {
                     basePrice = jsonObject.getBigDecimal("basePrice");
                 } catch (Exception e) {
-                    basePrice = BigDecimal.valueOf(-1);
+                    basePrice = null;
                 }
                 deliveries.add(new Delivery(id, type, client, date, volume, distance, basePrice));
             };
         }
+        ArrayList<Delivery> invalidDeliveries = new ArrayList<>();
         for(Delivery delivery: deliveries){
-            System.out.println("Delivery: ");
+            if (delivery.isValid(deliveries, deliveries.indexOf(delivery)) == true) {
+                System.out.println(delivery);
+            } else {
+                invalidDeliveries.add(delivery);
+            }
+        }
+        System.out.println("Found " + invalidDeliveries.size() + " invalid deliveries: ");
+        for (Delivery delivery : invalidDeliveries) {
             System.out.println(delivery);
+            
         }
     }
 }
