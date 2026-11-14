@@ -27,6 +27,9 @@ public class Delivery {
     public String getID(){
         return this.id;
     }
+    public errorCodes getErrorCode(){
+        return this.errorCode;
+    }
     public boolean isValid(ArrayList<Delivery> deliveries, int deliveryIndex){
         if (hasMissingField() == true) {
             this.errorCode = errorCodes.MISSING_FIELD;

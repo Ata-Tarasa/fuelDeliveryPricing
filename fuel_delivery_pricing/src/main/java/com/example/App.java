@@ -1,5 +1,9 @@
 package com.example;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -28,6 +32,7 @@ public class App
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+
         for (String row : rows) {
             row = row.replace("[", "").replace("]", "");
             if (!row.equals("")) {
@@ -40,6 +45,7 @@ public class App
                 BigDecimal volume;
                 BigDecimal distance;
                 BigDecimal basePrice;
+
                 try {
                     id = jsonObject.getString("id");
                 } catch (Exception e) {
@@ -78,18 +84,48 @@ public class App
                 deliveries.add(new Delivery(id, type, client, date, volume, distance, basePrice));
             };
         }
+
         ArrayList<Delivery> invalidDeliveries = new ArrayList<>();
         for(Delivery delivery: deliveries){
             if (delivery.isValid(deliveries, deliveries.indexOf(delivery)) == true) {
-                System.out.println(delivery);
+                
             } else {
                 invalidDeliveries.add(delivery);
             }
         }
-        System.out.println("Found " + invalidDeliveries.size() + " invalid deliveries: ");
-        for (Delivery delivery : invalidDeliveries) {
-            System.out.println(delivery);
+
+        System.out.println("Found " + invalidDeliveries.size() + " invalid deliveries. Writing to output/errors.csv");
+        try {
+            Files.createDirectories(Paths.get("output"));
+        } catch (IOException e) {
+            System.out.println("Failed to create output directory.");
+            return;
+        }
+        File errorFile = new File("output/errors.csv");
+        try {
+            errorFile.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Failed to create output/errors.csv.");
+            return;
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(errorFile))) {
+            writer.write("Karolis_Markevičius");
+            writer.newLine();
+            writer.write("ShipmentID,ErrorCode");
+            writer.newLine();
+            for (Delivery delivery : invalidDeliveries) {
+                if (delivery.getID() == null) {
+                    writer.write("," + delivery.getErrorCode());
+                    writer.newLine();
+                } else {
+                    writer.write(delivery.getID() + "," + delivery.getErrorCode());
+                    writer.newLine();
+                }
             
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
     }
 }
