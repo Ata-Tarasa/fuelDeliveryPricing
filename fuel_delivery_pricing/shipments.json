@@ -1,0 +1,19 @@
+[
+  { "id": "9ec55ff2-7ab5-4cdf-b2fb-2aee508a9d56", "type": "DIESEL", "client": "PRIVATE", "date": "2023-12-28", "volume": 6200, "distance": 145.5, "basePrice": 0.93 },
+  { "id": "c47c3701-232f-410f-a281-5e5798c5c979", "type": "GASOLINE", "client": "EXEMPT", "date": "15/01/2024", "volume": 25000, "distance": 320, "basePrice": 0.89 },
+  { "id": "3e8b6f52-1c47-4a9d-8e25-7b0d4c9a1f63", "type": "KEROSENE", "client": "PRIVATE", "date": "2024-03-05", "volume": 1500, "distance": 50, "basePrice": 0.8 },
+  { "id": "f19235e4-edf1-46df-81d6-67c644ee65c7", "type": "LPG", "client": "PRIVATE", "date": "2024-02-29", "volume": 800, "distance": 60, "basePrice": 0.52 },
+  { "id": "480100d2-4d5d-460e-ab5a-cb3e54bb484a", "type": "DIESEL", "client": "PRIVATE", "date": "2023-12-31", "volume": 5000, "distance": 90, "basePrice": 0.91 },
+  { "id": "67fe5380-609c-4d58-b8fc-dcd8ddcb98ba", "type": "GASOLINE", "client": "PRIVATE", "date": "01/01/2024", "volume": 5001, "distance": 90, "basePrice": 0.95 },
+  { "id": "b612de70-6792-418b-85e3-07da86c8a233", "type": "DIESEL", "client": "PRIVATE", "date": "2024-02-10", "volume": -2000, "distance": 40, "basePrice": 0.9 },
+  { "id": "a41d9c07-5e82-4b36-9f1a-2d8c6e0b7f45", "type": "GASOLINE", "client": "PRIVATE", "date": "2023-02-30", "volume": 2000, "distance": 80, "basePrice": 0.9 },
+  { "id": "35d5cf85-fcec-4658-87e8-53f26826359e", "type": "DIESEL", "client": "PRIVATE", "date": "2024-05-20", "volume": 3500, "distance": 210.25, "basePrice": 0.92 },
+  { "id": "b65135ab-d4d5-4d7d-92f0-44a4353e4b46", "type": "GASOLINE", "client": "EXEMPT", "date": "2024-01-31", "volume": 1003, "distance": 64.4, "basePrice": 0.895 },
+  { "id": "6f2a8d13-9b50-4c74-a3e8-1c5d7b9e0a24", "type": "DIESEL", "client": "EXEMPT", "date": "2024-04-10", "volume": 1200, "distance": 30 },
+  { "id": "08541693-d9ce-444a-a4c2-269afded9f2a", "type": "DIESEL", "client": "PRIVATE", "date": "31/01/2024", "volume": 3333, "distance": 177.7, "basePrice": 0.9133 },
+  { "id": "4fc31099-170f-45f8-80b4-45b3367ea45d", "type": "LPG", "client": "PRIVATE", "date": "2024-07-04", "volume": 12000, "distance": 90, "basePrice": 0.51 },
+  { "id": "d09e3b78-4a16-4f52-b8c7-0e1a5d3f9c86", "type": "LPG", "client": "GOVERNMENT", "date": "2024-05-02", "volume": 4000, "distance": 70, "basePrice": 0.55 },
+  { "id": "5b339212-3763-430d-b8da-0b21314e7d6b", "type": "DIESEL", "client": "PRIVATE", "date": "2024-02-15", "volume": 4750, "distance": 142.8, "basePrice": 0.9133 },
+  { "id": "e8ea02fe-6f12-487f-9500-d2959f8b72a0", "type": "GASOLINE", "client": "PRIVATE", "date": "03/04/2024", "volume": 6200, "distance": 63.7, "basePrice": 0.8775 },
+  { "id": "35d5cf85-fcec-4658-87e8-53f26826359e", "type": "DIESEL", "client": "PRIVATE", "date": "2024-06-01", "volume": 2500, "distance": 40, "basePrice": 0.92 }
+]

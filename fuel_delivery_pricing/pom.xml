@@ -26,9 +26,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.json</groupId>
-      <artifactId>javax.json-api</artifactId>
-      <version>1.0</version>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20260814</version>
     </dependency>
   </dependencies>
 
