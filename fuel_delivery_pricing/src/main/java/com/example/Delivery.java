@@ -40,6 +40,9 @@ public class Delivery {
     public errorCodes getErrorCode(){
         return this.errorCode;
     }
+    public String getCalculationValues(){
+        return this.id + "," + this.NetFuelPrice + "," + this.LogisticsCost + "," + this.TotalTax + "," + this.GrandTotal;
+    }
     public void calculate(){
         BigDecimal discountRate = getDiscountRate();
         this.NetFuelPrice = this.volume

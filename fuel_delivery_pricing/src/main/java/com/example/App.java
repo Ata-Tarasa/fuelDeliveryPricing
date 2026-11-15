@@ -26,6 +26,66 @@ public class App
     {   
         
         ArrayList<Delivery> deliveries = new ArrayList<>();
+        
+        getDeliveries(deliveries);
+
+        ArrayList<Delivery> invalidDeliveries = new ArrayList<>();
+        ArrayList<Delivery> validDeliveries = new ArrayList<>();
+
+        for(Delivery delivery: deliveries){
+            if (delivery.isValid(deliveries, deliveries.indexOf(delivery)) == true) {
+                delivery.calculate();
+                validDeliveries.add(delivery);
+            } else {
+                invalidDeliveries.add(delivery);
+            }
+        }
+
+        try {
+            Files.createDirectories(Paths.get("output"));
+        } catch (IOException e) {
+            System.out.println("Failed to create output directory.");
+            return;
+        }
+
+        printToFile("output/errors.csv", "ShipmentId,ErrorCode", invalidDeliveries);
+        printToFile("output/task1.csv", "ShipmentID,NetFuelPrice,LogisticsCost,TotalTax,GrandTotal", validDeliveries);
+        
+    }
+    public static void printToFile(String fileName, String headerText, ArrayList<Delivery> deliveries){
+        File writeFileName = new File(fileName);
+        try {
+            writeFileName.createNewFile();
+        } catch (IOException e) {
+            System.out.println("Failed to create " + fileName);
+            return;
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeFileName))) {
+            writer.write("Karolis_Markevičius");
+            writer.newLine();
+            writer.write(headerText);
+            writer.newLine();
+            for (Delivery delivery : deliveries) {
+                if (delivery.getErrorCode() == errorCodes.NONE) {
+                    writer.write(delivery.getCalculationValues());
+                    writer.newLine();
+                } else {
+                    if (delivery.getID() == null) {
+                        writer.write("," + delivery.getErrorCode());
+                        writer.newLine();
+                    } else {
+                        writer.write(delivery.getID() + "," + delivery.getErrorCode());
+                        writer.newLine();
+                    }
+                }
+            
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+    public static void getDeliveries(ArrayList<Delivery> deliveries){
         List<String> rows = new ArrayList<>();
         
         try {
@@ -84,49 +144,6 @@ public class App
                 }
                 deliveries.add(new Delivery(id, type, client, date, volume, distance, basePrice));
             };
-        }
-
-        ArrayList<Delivery> invalidDeliveries = new ArrayList<>();
-        for(Delivery delivery: deliveries){
-            if (delivery.isValid(deliveries, deliveries.indexOf(delivery)) == true) {
-                
-            } else {
-                invalidDeliveries.add(delivery);
-            }
-        }
-
-        System.out.println("Found " + invalidDeliveries.size() + " invalid deliveries. Writing to output/errors.csv");
-        try {
-            Files.createDirectories(Paths.get("output"));
-        } catch (IOException e) {
-            System.out.println("Failed to create output directory.");
-            return;
-        }
-        File errorFile = new File("output/errors.csv");
-        try {
-            errorFile.createNewFile();
-        } catch (IOException e) {
-            System.out.println("Failed to create output/errors.csv.");
-            return;
-        }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(errorFile))) {
-            writer.write("Karolis_Markevičius");
-            writer.newLine();
-            writer.write("ShipmentID,ErrorCode");
-            writer.newLine();
-            for (Delivery delivery : invalidDeliveries) {
-                if (delivery.getID() == null) {
-                    writer.write("," + delivery.getErrorCode());
-                    writer.newLine();
-                } else {
-                    writer.write(delivery.getID() + "," + delivery.getErrorCode());
-                    writer.newLine();
-                }
-            
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
         }
     }
 }
