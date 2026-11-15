@@ -1,10 +1,13 @@
 package com.example;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Delivery {
+
     private String id;
     private String type;
     private String client;
@@ -13,6 +16,13 @@ public class Delivery {
     private BigDecimal distance;
     private BigDecimal basePrice;
     private errorCodes errorCode;
+
+    private BigDecimal NetFuelPrice;
+    private BigDecimal LogisticsCost;
+    private BigDecimal Excise;
+    private BigDecimal VAT;
+    private BigDecimal TotalTax;
+    private BigDecimal GrandTotal;
 
     public Delivery(String id, String type, String client, String date, BigDecimal volume, BigDecimal distance, BigDecimal basePrice){
         this.id = id;
@@ -30,6 +40,102 @@ public class Delivery {
     public errorCodes getErrorCode(){
         return this.errorCode;
     }
+    public void calculate(){
+        BigDecimal discountRate = getDiscountRate();
+        this.NetFuelPrice = this.volume
+            .multiply(this.basePrice)
+            .multiply(BigDecimal.ONE.subtract(discountRate))
+            .setScale(2, RoundingMode.HALF_UP);
+        
+        BigDecimal loadFee = getLoadFee();
+        this.LogisticsCost = this.distance
+            .multiply(new BigDecimal("1.80"))
+            .add(loadFee)
+            .setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal excisePerLiter = getExcisePerLiter();
+        this.Excise = this.volume
+            .multiply(excisePerLiter)
+            .setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal vatRate = getVatRate();
+        this.VAT = this.NetFuelPrice
+            .add(this.LogisticsCost)
+            .add(this.Excise)
+            .multiply(vatRate)
+            .setScale(2, RoundingMode.HALF_UP);
+
+        this.TotalTax = this.Excise
+            .add(this.VAT)
+            .setScale(2, RoundingMode.HALF_UP);
+
+        this.GrandTotal = this.NetFuelPrice
+            .add(this.LogisticsCost)
+            .add(this.TotalTax)
+            .setScale(2, RoundingMode.HALF_UP);
+        
+    }
+    
+    private BigDecimal getVatRate() {
+        BigDecimal temp_rate = BigDecimal.ZERO;
+        switch (this.client) {
+            case "EXEMPT":
+                temp_rate = new BigDecimal("0.00");
+                break;
+            case "PRIVATE":
+                LocalDate localDate = parseDate(this.date);
+                if (localDate.isBefore(LocalDate.parse("2024-01-01"))) {
+                    temp_rate = new BigDecimal("0.21");
+                } else {
+                    temp_rate = new BigDecimal("0.23");
+                }
+                break;
+            default:
+                break;
+        }
+        return temp_rate;
+    }
+    private LocalDate parseDate(String date) {
+        if (date.contains("/")) {
+            return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/uuuu"));
+        } else {
+            return LocalDate.parse(date);
+        }
+    }
+    private BigDecimal getExcisePerLiter() {
+        BigDecimal excPerL = BigDecimal.ZERO;
+        switch (this.type) {
+            case "GASOLINE":
+                excPerL = new BigDecimal("0.47");
+                break;
+            case "DIESEL":
+                excPerL =  new BigDecimal("0.33");
+                break;
+            case "LPG":
+                excPerL = new BigDecimal("0.18");
+                break;
+            default:
+                break;
+        }
+        return excPerL;
+    }
+    private BigDecimal getLoadFee() {
+        if (this.volume.compareTo(BigDecimal.valueOf(1000)) < 0) {
+            return new BigDecimal("150.00");
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+    private BigDecimal getDiscountRate() {
+        BigDecimal temp_rate = BigDecimal.ZERO;
+        if (this.volume.compareTo(BigDecimal.valueOf(20000)) > 0) {
+            temp_rate = new BigDecimal("0.10");
+        } else if (this.volume.compareTo(BigDecimal.valueOf(5000)) > 0) {
+            temp_rate = new BigDecimal("0.05");
+        }
+        return temp_rate;
+    }
+
     public boolean isValid(ArrayList<Delivery> deliveries, int deliveryIndex){
         if (hasMissingField() == true) {
             this.errorCode = errorCodes.MISSING_FIELD;
