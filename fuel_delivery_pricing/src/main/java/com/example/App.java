@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import org.json.JSONObject; 
 /**
@@ -50,6 +52,46 @@ public class App
 
         printToFile("output/errors.csv", "ShipmentId,ErrorCode", invalidDeliveries);
         printToFile("output/task1.csv", "ShipmentID,NetFuelPrice,LogisticsCost,TotalTax,GrandTotal", validDeliveries);
+        
+        BigDecimal customVATRate;
+        BigDecimal customExciseRateGasoline;
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("Enter custom VAT rate for Private clients (%): ");
+            try {
+                customVATRate = new BigDecimal(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid value format, try again.");
+                continue;
+            }
+            if (customVATRate.compareTo(BigDecimal.valueOf(0)) < 0) {
+                System.out.println("Invalid value, try again");
+                continue;   
+            }
+            customVATRate = customVATRate
+                .divide(BigDecimal.valueOf(100));
+            break;
+        }
+        while (true) {
+            System.out.println("Enter custom Excise rate for Gasoline: ");
+            try {
+                customExciseRateGasoline = new BigDecimal(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid value format, try again.");
+                continue;
+            }
+            
+            if (customExciseRateGasoline.compareTo(BigDecimal.valueOf(0)) < 0) {
+                System.out.println("Invalid value, try again");
+                continue;   
+            }
+            break;
+        }
+        scanner.close();
+        for (Delivery delivery : validDeliveries) {
+            delivery.calculate(customVATRate, customExciseRateGasoline);
+        }
+        printToFile("output/task2.csv", "ShipmentID,NetFuelPrice,LogisticsCost,TotalTax,GrandTotal", validDeliveries);
         
     }
     public static void printToFile(String fileName, String headerText, ArrayList<Delivery> deliveries){

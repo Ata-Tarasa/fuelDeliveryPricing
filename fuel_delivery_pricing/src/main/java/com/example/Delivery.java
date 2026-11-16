@@ -44,6 +44,10 @@ public class Delivery {
         return this.id + "," + this.NetFuelPrice + "," + this.LogisticsCost + "," + this.TotalTax + "," + this.GrandTotal;
     }
     public void calculate(){
+        calculate(null, null);
+    }
+
+    public void calculate(BigDecimal customVATRate, BigDecimal customExciseRateGasoline){
         BigDecimal discountRate = getDiscountRate();
         this.NetFuelPrice = this.volume
             .multiply(this.basePrice)
@@ -55,13 +59,22 @@ public class Delivery {
             .multiply(new BigDecimal("1.80"))
             .add(loadFee)
             .setScale(2, RoundingMode.HALF_UP);
-
-        BigDecimal excisePerLiter = getExcisePerLiter();
+        BigDecimal excisePerLiter;
+        if (customExciseRateGasoline != null && this.type.equals("GASOLINE")) {
+            excisePerLiter = customExciseRateGasoline;
+        } else {
+            excisePerLiter = getExcisePerLiter();
+        }
         this.Excise = this.volume
             .multiply(excisePerLiter)
             .setScale(2, RoundingMode.HALF_UP);
-
-        BigDecimal vatRate = getVatRate();
+        
+        BigDecimal vatRate;
+        if (customVATRate != null && this.client.equals("PRIVATE")) {
+            vatRate = customVATRate;
+        } else {
+            vatRate = getVatRate();
+        }
         this.VAT = this.NetFuelPrice
             .add(this.LogisticsCost)
             .add(this.Excise)
