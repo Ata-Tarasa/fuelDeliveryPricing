@@ -2,5 +2,6 @@
 fuel_delivery_pricing/target/
 fuel_delivery_pricing/fuel-delivery.jar
 fuel_delivery_pricing/fuel-delivery
+fuel_delivery_pricing/fuel-delivery.bat
 fuel_delivery_pricing/output/
 fuel_delivery_pricing/dependency-reduced-pom.xml
