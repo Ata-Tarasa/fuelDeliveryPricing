@@ -157,11 +157,10 @@
               <goals><goal>run</goal></goals>
               <configuration>
                 <target>
-                  <concat destfile="./fuel-delivery.bat" binary="true" force="yes">
-                    <string>@echo off&#13;&#10;java -jar "%~f0" %*&#13;&#10;exit /b %errorlevel%&#13;&#10;</string>
-                    <fileset file="./fuel-delivery.jar"/>
-                  </concat>
-                </target>
+  			          <echo file="./fuel-delivery.bat">@echo off
+		            java -jar "%~dp0./fuel-delivery.jar" %*
+		            </echo>
+		            </target>
               </configuration>
             </execution>
           </executions>
